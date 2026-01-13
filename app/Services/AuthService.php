@@ -30,6 +30,16 @@ class AuthService
         ]);
     }
 
+    public function register(array $data)
+    {
+        $data['password'] = Hash::make($data['password']);
+        $user = $this->userRepo->create($data);
+
+        return response()->json([
+            'user' => $user,
+        ], 201);
+    }
+
     public function logout($user)
     {
         $user->currentAccessToken()->delete();
