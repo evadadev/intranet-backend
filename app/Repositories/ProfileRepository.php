@@ -12,7 +12,7 @@ class ProfileRepository implements ProfileRepositoryInterface
      */
     public function getByUserId(int $userId)
     {
-        return Profile::where('user_id', $userId)->first();
+        return Profile::with('user')->where('user_id', $userId)->first();
     }
 
     /**
@@ -20,10 +20,12 @@ class ProfileRepository implements ProfileRepositoryInterface
      */
     public function findOrCreateByUserId(int $userId, array $data = [])
     {
-        return Profile::firstOrCreate(
+        $profile = Profile::firstOrCreate(
             ['user_id' => $userId],
             array_merge(['user_id' => $userId], $data)
         );
+        
+        return $profile->load('user');
     }
 
     /**
@@ -38,7 +40,7 @@ class ProfileRepository implements ProfileRepositoryInterface
         }
 
         $profile->update($data);
-        return $profile;
+        return $profile->load('user');
     }
 
     /**
@@ -60,6 +62,6 @@ class ProfileRepository implements ProfileRepositoryInterface
      */
     public function getByUser($user)
     {
-        return $user->profile;
+        return $user->load('profile.user')->profile;
     }
 }
