@@ -17,7 +17,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'show']);
-    Route::put('/profile', [ProfileController::class, 'update']);
+    Route::put('/profile/{id}', [ProfileController::class, 'update']);
     Route::delete('/profile', [ProfileController::class, 'destroy']);
 
     // Get specific user's profile (admin)

@@ -36,10 +36,10 @@ class ProfileController extends Controller
     /**
      * Update the authenticated user's profile.
      */
-    public function update(ProfileRequest $request): JsonResponse
+    public function update(ProfileRequest $request, int $id): JsonResponse
     {
         $validated = $request->validated();
-        $profile = $this->profileRepository->updateByUserId($request->user()->id, $validated);
+        $profile = $this->profileRepository->updateByUserId($id, $validated);
 
         return response()->json($profile, 200);
     }
@@ -52,9 +52,7 @@ class ProfileController extends Controller
         $profile = $this->profileRepository->getByUserId($user->id);
 
         if (!$profile) {
-            return response()->json([
-                'message' => 'Profile not found',
-            ], 404);
+            $profile = $this->profileRepository->findOrCreateByUserId($user->id);
         }
 
         return response()->json($profile, 200);
